@@ -30,6 +30,7 @@ Ext.define('Traccar.view.dialog.UserController', {
             this.lookupReference('disabledField').setDisabled(false);
             this.lookupReference('expirationTimeField').setDisabled(false);
             this.lookupReference('deviceReadonlyField').setDisabled(false);
+            this.lookupReference('limitCommandsField').setDisabled(false);
         }
     },
 
@@ -47,7 +48,7 @@ Ext.define('Traccar.view.dialog.UserController', {
 
     testNotification: function () {
         Ext.Ajax.request({
-            url: 'api/users/notifications/test',
+            url: 'api/notifications/test',
             method: 'POST',
             failure: function (response) {
                 Traccar.app.showError(response);

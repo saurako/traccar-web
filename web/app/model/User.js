@@ -26,6 +26,9 @@ Ext.define('Traccar.model.User', {
         name: 'name',
         type: 'string'
     }, {
+        name: 'login',
+        type: 'string'
+    }, {
         name: 'email',
         type: 'string'
     }, {
@@ -42,12 +45,6 @@ Ext.define('Traccar.model.User', {
         type: 'boolean'
     }, {
         name: 'map',
-        type: 'string'
-    }, {
-        name: 'distanceUnit',
-        type: 'string'
-    }, {
-        name: 'speedUnit',
         type: 'string'
     }, {
         name: 'latitude',
@@ -81,10 +78,10 @@ Ext.define('Traccar.model.User', {
         name: 'deviceReadonly',
         type: 'boolean'
     }, {
-        name: 'token',
-        type: 'string'
+        name: 'limitCommands',
+        type: 'boolean'
     }, {
-        name: 'timezone',
+        name: 'token',
         type: 'string'
     }, {
         name: 'attributes'

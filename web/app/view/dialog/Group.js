@@ -18,6 +18,10 @@
 Ext.define('Traccar.view.dialog.Group', {
     extend: 'Traccar.view.dialog.BaseEdit',
 
+    requires: [
+        'Traccar.view.ClearableComboBox'
+    ],
+
     title: Strings.groupDialog,
 
     items: {
@@ -37,9 +41,8 @@ Ext.define('Traccar.view.dialog.Group', {
             collapsible: true,
             collapsed: true,
             items: [{
-                xtype: 'combobox',
+                xtype: 'clearableComboBox',
                 name: 'groupId',
-                fieldLabel: Strings.groupParent,
                 store: 'Groups',
                 queryMode: 'local',
                 displayField: 'name',

@@ -19,6 +19,7 @@ Ext.define('Traccar.view.dialog.Server', {
     extend: 'Traccar.view.dialog.BaseEdit',
 
     requires: [
+        'Traccar.view.ClearableComboBox',
         'Traccar.view.dialog.MapPickerController'
     ],
 
@@ -31,13 +32,12 @@ Ext.define('Traccar.view.dialog.Server', {
             xtype: 'fieldset',
             title: Strings.sharedPreferences,
             items: [{
-                xtype: 'combobox',
+                xtype: 'clearableComboBox',
                 name: 'map',
                 fieldLabel: Strings.mapLayer,
                 store: 'MapTypes',
                 displayField: 'name',
-                valueField: 'key',
-                editable: false
+                valueField: 'key'
             }, {
                 xtype: 'textfield',
                 name: 'bingKey',
@@ -46,22 +46,6 @@ Ext.define('Traccar.view.dialog.Server', {
                 xtype: 'textfield',
                 name: 'mapUrl',
                 fieldLabel: Strings.mapCustom
-            }, {
-                xtype: 'combobox',
-                name: 'distanceUnit',
-                fieldLabel: Strings.sharedDistance,
-                store: 'DistanceUnits',
-                displayField: 'name',
-                valueField: 'key',
-                editable: false
-            }, {
-                xtype: 'combobox',
-                name: 'speedUnit',
-                fieldLabel: Strings.settingsSpeedUnit,
-                store: 'SpeedUnits',
-                displayField: 'name',
-                valueField: 'key',
-                editable: false
             }, {
                 xtype: 'numberfield',
                 reference: 'latitude',
@@ -84,31 +68,20 @@ Ext.define('Traccar.view.dialog.Server', {
                 inputValue: true,
                 uncheckedValue: false,
                 name: 'twelveHourFormat',
-                fieldLabel: Strings.settingsTwelveHourFormat,
-                allowBlank: false
+                fieldLabel: Strings.settingsTwelveHourFormat
             }, {
                 xtype: 'checkboxfield',
                 inputValue: true,
                 uncheckedValue: false,
                 name: 'forceSettings',
-                fieldLabel: Strings.serverForceSettings,
-                allowBlank: false
+                fieldLabel: Strings.serverForceSettings
             }, {
-                xtype: 'combobox',
+                xtype: 'clearableComboBox',
                 name: 'coordinateFormat',
                 fieldLabel: Strings.settingsCoordinateFormat,
                 store: 'CoordinateFormats',
                 displayField: 'name',
-                valueField: 'key',
-                editable: false
-            }, {
-                xtype: 'combobox',
-                name: 'timezone',
-                fieldLabel: Strings.sharedTimezone,
-                store: 'AllTimezones',
-                queryMode: 'local',
-                displayField: 'key',
-                editable: false
+                valueField: 'key'
             }]
         }, {
             xtype: 'fieldset',
@@ -120,22 +93,25 @@ Ext.define('Traccar.view.dialog.Server', {
                 inputValue: true,
                 uncheckedValue: false,
                 name: 'registration',
-                fieldLabel: Strings.serverRegistration,
-                allowBlank: false
+                fieldLabel: Strings.serverRegistration
             }, {
                 xtype: 'checkboxfield',
                 inputValue: true,
                 uncheckedValue: false,
                 name: 'readonly',
-                fieldLabel: Strings.serverReadonly,
-                allowBlank: false
+                fieldLabel: Strings.serverReadonly
             }, {
                 xtype: 'checkboxfield',
                 inputValue: true,
                 uncheckedValue: false,
                 name: 'deviceReadonly',
-                fieldLabel: Strings.userDeviceReadonly,
-                allowBlank: false
+                fieldLabel: Strings.userDeviceReadonly
+            }, {
+                xtype: 'checkboxfield',
+                inputValue: true,
+                uncheckedValue: false,
+                name: 'limitCommands',
+                fieldLabel: Strings.userLimitCommands
             }]
         }]
     },

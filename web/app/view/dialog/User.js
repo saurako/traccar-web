@@ -19,6 +19,7 @@ Ext.define('Traccar.view.dialog.User', {
     extend: 'Traccar.view.dialog.BaseEdit',
 
     requires: [
+        'Traccar.view.ClearableComboBox',
         'Traccar.view.dialog.UserController'
     ],
 
@@ -56,29 +57,12 @@ Ext.define('Traccar.view.dialog.User', {
                 name: 'phone',
                 fieldLabel: Strings.sharedPhone
             }, {
-                xtype: 'combobox',
+                xtype: 'clearableComboBox',
                 name: 'map',
                 fieldLabel: Strings.mapLayer,
                 store: 'MapTypes',
                 displayField: 'name',
-                valueField: 'key',
-                editable: false
-            }, {
-                xtype: 'combobox',
-                name: 'distanceUnit',
-                fieldLabel: Strings.sharedDistance,
-                store: 'DistanceUnits',
-                displayField: 'name',
-                valueField: 'key',
-                editable: false
-            }, {
-                xtype: 'combobox',
-                name: 'speedUnit',
-                fieldLabel: Strings.settingsSpeedUnit,
-                store: 'SpeedUnits',
-                displayField: 'name',
-                valueField: 'key',
-                editable: false
+                valueField: 'key'
             }, {
                 xtype: 'numberfield',
                 reference: 'latitude',
@@ -101,24 +85,14 @@ Ext.define('Traccar.view.dialog.User', {
                 inputValue: true,
                 uncheckedValue: false,
                 name: 'twelveHourFormat',
-                fieldLabel: Strings.settingsTwelveHourFormat,
-                allowBlank: false
+                fieldLabel: Strings.settingsTwelveHourFormat
             }, {
-                xtype: 'combobox',
+                xtype: 'clearableComboBox',
                 name: 'coordinateFormat',
                 fieldLabel: Strings.settingsCoordinateFormat,
                 store: 'CoordinateFormats',
                 displayField: 'name',
-                valueField: 'key',
-                editable: false
-            }, {
-                xtype: 'combobox',
-                name: 'timezone',
-                fieldLabel: Strings.sharedTimezone,
-                store: 'AllTimezones',
-                queryMode: 'local',
-                displayField: 'key',
-                editable: false
+                valueField: 'key'
             }]
         }, {
             xtype: 'fieldset',
@@ -130,7 +104,7 @@ Ext.define('Traccar.view.dialog.User', {
                 inputValue: true,
                 uncheckedValue: false,
                 name: 'disabled',
-                fieldLabel: Strings.userDisabled,
+                fieldLabel: Strings.sharedDisabled,
                 disabled: true,
                 reference: 'disabledField'
             }, {
@@ -157,6 +131,14 @@ Ext.define('Traccar.view.dialog.User', {
                 fieldLabel: Strings.userDeviceReadonly,
                 disabled: true,
                 reference: 'deviceReadonlyField'
+            }, {
+                xtype: 'checkboxfield',
+                inputValue: true,
+                uncheckedValue: false,
+                name: 'limitCommands',
+                fieldLabel: Strings.userLimitCommands,
+                disabled: true,
+                reference: 'limitCommandsField'
             }, {
                 xtype: 'datefield',
                 name: 'expirationTime',

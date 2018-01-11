@@ -40,6 +40,9 @@ Ext.define('Traccar.view.ReportController', {
                     selectreport: 'selectReport'
                 }
             },
+            global: {
+                routegeocode: 'onGeocode'
+            },
             store: {
                 '#ReportEvents': {
                     add: 'loadRelatedPositions',
@@ -79,6 +82,23 @@ Ext.define('Traccar.view.ReportController', {
                 hidden: true
             });
         }
+        if (Traccar.app.getVehicleFeaturesDisabled()) {
+            for (i = 0; i < this.summaryColumns.length; i++) {
+                if (this.summaryColumns[i].dataIndex.match('engineHours|spentFuel')) {
+                    this.summaryColumns[i].hidden = true;
+                }
+            }
+            for (i = 0; i < this.tripsColumns.length; i++) {
+                if (this.tripsColumns[i].dataIndex.match('spentFuel|driverUniqueId')) {
+                    this.tripsColumns[i].hidden = true;
+                }
+            }
+            for (i = 0; i < this.stopsColumns.length; i++) {
+                if (this.stopsColumns[i].dataIndex.match('engineHours|spentFuel')) {
+                    this.stopsColumns[i].hidden = true;
+                }
+            }
+        }
     },
 
     onConfigureClick: function () {
@@ -111,13 +131,16 @@ Ext.define('Traccar.view.ReportController', {
         if (this.toTime !== undefined) {
             dialog.lookupReference('toTimeField').setValue(this.toTime);
         }
+        if (this.period !== undefined) {
+            dialog.lookupReference('periodField').setValue(this.period);
+        }
         dialog.show();
     },
 
     updateButtons: function () {
         var reportType, disabled, devices, time;
         reportType = this.lookupReference('reportTypeField').getValue();
-        devices = (this.deviceId && this.deviceId.length !== 0) || (this.groupId && this.groupId.length !== 0);
+        devices = this.deviceId && this.deviceId.length !== 0 || this.groupId && this.groupId.length !== 0;
         time = this.fromDate && this.fromTime && this.toDate && this.toTime;
         disabled = !reportType || !devices || !time;
         this.lookupReference('showButton').setDisabled(disabled);
@@ -204,7 +227,7 @@ Ext.define('Traccar.view.ReportController', {
         }
     },
 
-    selectReport: function (object, center) {
+    selectReport: function (object) {
         var positionRelated, reportType = this.lookupReference('reportTypeField').getValue();
         if (object instanceof Traccar.model.Position) {
             if (reportType === 'route') {
@@ -281,15 +304,15 @@ Ext.define('Traccar.view.ReportController', {
         var i, deviceIds, chartSeries, deviceStore;
         if (this.lookupReference('reportTypeField').getValue() === 'chart') {
             this.getChart().getAxes()[0].setTitle(
-                    Ext.getStore('ReportChartTypes').findRecord('key', this.chartType).get('name'));
+                Ext.getStore('ReportChartTypes').findRecord('key', this.chartType).get('name'));
             chartSeries = [];
             deviceIds = store.collect('deviceId');
             for (i = 0; i < deviceIds.length; i++) {
-                deviceStore = new Ext.create('Ext.data.ChainedStore', {
+                deviceStore = Ext.create('Ext.data.ChainedStore', {
                     source: 'ReportRoute',
                     filters: [{
                         property: 'deviceId',
-                        value   : deviceIds[i]
+                        value: deviceIds[i]
                     }]
                 });
                 chartSeries.push({
@@ -403,6 +426,29 @@ Ext.define('Traccar.view.ReportController', {
         this.updateButtons();
     },
 
+    onGeocode: function (positionId) {
+        var position = Ext.getStore('ReportRoute').getById(positionId);
+        if (position && !position.get('address')) {
+            Ext.Ajax.request({
+                scope: this,
+                method: 'GET',
+                url: 'api/server/geocode',
+                params: {
+                    latitude: position.get('latitude'),
+                    longitude: position.get('longitude')
+                },
+                success: function (response) {
+                    position.set('address', response.responseText);
+                    position.commit();
+                    this.fireEvent('selectReport', position);
+                },
+                failure: function (response) {
+                    Traccar.app.showError(response);
+                }
+            });
+        }
+    },
+
     routeColumns: [{
         text: Strings.reportDeviceName,
         dataIndex: 'deviceId',
@@ -423,7 +469,7 @@ Ext.define('Traccar.view.ReportController', {
     }, {
         text: Strings.positionLongitude,
         dataIndex: 'longitude',
-        renderer: Traccar.AttributeFormatter.getFormatter('latitude')
+        renderer: Traccar.AttributeFormatter.getFormatter('longitude')
     }, {
         text: Strings.positionAltitude,
         dataIndex: 'altitude',
@@ -435,7 +481,14 @@ Ext.define('Traccar.view.ReportController', {
     }, {
         text: Strings.positionAddress,
         dataIndex: 'address',
-        renderer: Traccar.AttributeFormatter.getFormatter('address')
+        renderer: function (value, metaData, record) {
+            if (!value) {
+                return '<a href="#" onclick="Ext.fireEvent(\'routegeocode\', ' +
+                    record.getId() + ')" >' +
+                    Strings.sharedShowAddress + '</a>';
+            }
+            return Traccar.AttributeFormatter.getFormatter('address')(value);
+        }
     }],
 
     eventsColumns: [{
