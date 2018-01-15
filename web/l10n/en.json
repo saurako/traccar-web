@@ -406,5 +406,6 @@
     "categoryShip": "Ship",
     "categoryTractor": "Tractor",
     "categoryTruck": "Truck",
-    "categoryVan": "Van"
+    "categoryVan": "Van",
+    "registrationNumber": "Registration Number"
 }

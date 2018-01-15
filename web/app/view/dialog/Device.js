@@ -41,6 +41,11 @@ Ext.define('Traccar.view.dialog.Device', {
                 name: 'uniqueId',
                 fieldLabel: Strings.deviceIdentifier,
                 allowBlank: false
+            }, {
+                xtype: 'textfield',
+                name: 'registrationNumber',
+                fieldLabel: Strings.registrationNumber,
+                allowBlank: false
             }]
         }, {
             xtype: 'fieldset',
